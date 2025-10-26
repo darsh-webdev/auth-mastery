@@ -14,7 +14,6 @@ import { LoadingSwap } from "@/components/ui/loading-swap";
 import { PasswordInput } from "@/components/ui/password-input";
 import { authClient } from "@/lib/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
@@ -32,8 +31,6 @@ export function SignUpTab({
 }: {
   openEmailVerificationTab: (email: string) => void;
 }) {
-  const router = useRouter();
-
   const form = useForm<SignUpForm>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -51,10 +48,6 @@ export function SignUpTab({
       {
         onError: (error) => {
           toast.error(error.error.message || "Failed to sign up");
-        },
-        onSuccess: () => {
-          toast.success("Sign up successful");
-          router.push("/");
         },
       }
     );

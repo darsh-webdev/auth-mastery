@@ -30,18 +30,18 @@ export default function LoginPage() {
     });
   }, [router]);
 
-  const openEmailVerificationTab = (email: string) => {
+  function openEmailVerificationTab(email: string) {
     setEmail(email);
     setSelectedTab("email-verification");
-  };
+  }
 
   return (
     <Tabs
-      defaultValue={selectedTab}
+      value={selectedTab}
       onValueChange={(t) => setSelectedTab(t as Tab)}
       className="mx-auto w-full my-6 px-4"
     >
-      {selectedTab !== "email-verification" && (
+      {(selectedTab === "signin" || selectedTab === "signup") && (
         <TabsList>
           <TabsTrigger value="signin">Sign In</TabsTrigger>
           <TabsTrigger value="signup">Sign Up</TabsTrigger>
@@ -54,7 +54,7 @@ export default function LoginPage() {
             <CardTitle>Sign In</CardTitle>
           </CardHeader>
           <CardContent>
-            <SignInTab />
+            <SignInTab openEmailVerificationTab={openEmailVerificationTab} />
           </CardContent>
           <Separator />
           <CardFooter className="grid grid-cols-2 gap-3">
