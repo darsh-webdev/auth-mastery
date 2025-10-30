@@ -11,8 +11,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { LoadingSwap } from "@/components/ui/loading-swap";
+import { NumberInput } from "@/components/ui/number-input";
 import { PasswordInput } from "@/components/ui/password-input";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -22,6 +23,7 @@ const signUpSchema = z.object({
   email: z.email().min(1, "Email is required"),
   name: z.string().min(1, "Name is required"),
   password: z.string().min(8, "Password is required"),
+  favouriteNumber: z.number().int(),
 });
 
 type SignUpForm = z.infer<typeof signUpSchema>;
@@ -86,6 +88,7 @@ export function SignUpTab({
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="password"
@@ -94,6 +97,20 @@ export function SignUpTab({
               <FormLabel>Password</FormLabel>
               <FormControl>
                 <PasswordInput placeholder="Enter your password" {...field} />
+              </FormControl>
+              <FormMessage></FormMessage>
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="favouriteNumber"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Favourite Number</FormLabel>
+              <FormControl>
+                <NumberInput {...field} />
               </FormControl>
               <FormMessage></FormMessage>
             </FormItem>
