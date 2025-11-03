@@ -1,10 +1,13 @@
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { auth } from "@/lib/auth/auth";
-import { ArrowLeft, User } from "lucide-react";
+import { ArrowLeft, Key, LinkIcon, Shield, Trash2, User } from "lucide-react";
 import { headers } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { ProfileUpdateForm } from "./_components/profile-update-form";
 
 export default async function ProfilePage() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -43,6 +46,39 @@ export default async function ProfilePage() {
           </div>
         </div>
       </div>
+
+      <Tabs className="space-y-2" defaultValue="profile">
+        <TabsList className="grid w-full grid-cols-5">
+          <TabsTrigger value="profile">
+            <User />
+            <span className="max-sm:hidden">Profile</span>
+          </TabsTrigger>
+          <TabsTrigger value="security">
+            <Shield />
+            <span className="max-sm:hidden">Security</span>
+          </TabsTrigger>
+          <TabsTrigger value="sessions">
+            <Key />
+            <span className="max-sm:hidden">Sessions</span>
+          </TabsTrigger>
+          <TabsTrigger value="accounts">
+            <LinkIcon />
+            <span className="max-sm:hidden">Accounts</span>
+          </TabsTrigger>
+          <TabsTrigger value="danger">
+            <Trash2 />
+            <span className="max-sm:hidden">Danger</span>
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="profile">
+          <Card>
+            <CardContent>
+              <ProfileUpdateForm user={session.user} />
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

@@ -9,6 +9,15 @@ import { sendWelcomeEmail } from "../emails/welcome-email";
 
 export const auth = betterAuth({
   user: {
+    changeEmail: {
+      enabled: true,
+      sendChangeEmailVerification: async ({ user, url, newEmail }) => {
+        await sendVerificationEmail({
+          user: { ...user, email: newEmail },
+          url,
+        });
+      },
+    },
     additionalFields: {
       favouriteNumber: {
         type: "number",
