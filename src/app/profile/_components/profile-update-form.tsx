@@ -22,7 +22,7 @@ import z from "zod";
 type ProfileUpdateFormProps = {
   name: string;
   email: string;
-  favoriteNumber: number;
+  favouriteNumber: number;
 };
 
 const profileUpdateSchema = z.object({
