@@ -6,6 +6,7 @@ import { sendPasswordResetEmail } from "../emails/password-reset-email";
 import { sendVerificationEmail } from "../emails/email-verification";
 import { createAuthMiddleware } from "better-auth/api";
 import { sendWelcomeEmail } from "../emails/welcome-email";
+import { twoFactor } from "better-auth/plugins/two-factor";
 
 export const auth = betterAuth({
   user: {
@@ -68,7 +69,7 @@ export const auth = betterAuth({
       maxAge: 60 * 5, // 5 minutes
     },
   },
-  plugins: [nextCookies()],
+  plugins: [nextCookies(), twoFactor()],
   hooks: {
     after: createAuthMiddleware(async (ctx) => {
       if (ctx.path.startsWith("/sign-up")) {
