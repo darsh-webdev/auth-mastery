@@ -101,7 +101,11 @@ export function ChangePasswordForm() {
           )}
         />
 
-        <Button type="submit" disabled={isSubmitting} className="w-full">
+        <Button
+          type="submit"
+          disabled={isSubmitting}
+          className="w-full cursor-pointer"
+        >
           <LoadingSwap isLoading={isSubmitting}>Change Password</LoadingSwap>
         </Button>
       </form>
