@@ -157,7 +157,24 @@ function QrCodeVerify({
   }
 
   if (successfullyEnabled) {
-    return "2FA Enabled";
+    return (
+      <>
+        <p className="text-sm text-muted-foreground mb-2">
+          Save these backup codes in a safe place. You can use them to access
+          your account.
+        </p>
+        <div className="grid grid-cols-2 gap-2 mb-4">
+          {backupCodes.map((code, index) => (
+            <div key={index} className="font-mono text-sm">
+              {code}
+            </div>
+          ))}
+        </div>
+        <Button variant="outline" className="cursor-pointer" onClick={onDone}>
+          Done
+        </Button>
+      </>
+    );
   }
 
   return (
