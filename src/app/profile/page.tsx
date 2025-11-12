@@ -29,6 +29,7 @@ import { SessionManagement } from "./_components/session-management";
 import { AccountLinking } from "./_components/account-linking";
 import { AccountDeletion } from "./_components/account-deletion";
 import { TwoFactorAuthentication } from "./_components/two-factor-authentication";
+import { PasskeyManagement } from "./_components/passkey-management";
 
 export default async function ProfilePage() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -161,8 +162,11 @@ async function SecurityTab({
   email: string;
   isTwoFactorEnabled: boolean;
 }) {
-  const accounts = auth.api.listUserAccounts({ headers: await headers() });
-  const hasPasswordAccount = (await accounts).some(
+  const [passkeys, accounts] = await Promise.all([
+    auth.api.listPasskeys({ headers: await headers() }),
+    auth.api.listUserAccounts({ headers: await headers() }),
+  ]);
+  const hasPasswordAccount = accounts.some(
     (a) => a.providerId === "credential"
   );
 
@@ -207,6 +211,15 @@ async function SecurityTab({
           </CardContent>
         </Card>
       )}
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Passkeys</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <PasskeyManagement passkeys={passkeys} />
+        </CardContent>
+      </Card>
     </div>
   );
 }
