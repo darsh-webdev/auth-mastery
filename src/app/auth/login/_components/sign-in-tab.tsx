@@ -1,5 +1,6 @@
 "use client";
 
+import { PasskeyButton } from "@/app/auth/login/_components/passkey-button";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -63,50 +64,57 @@ export function SignInTab({
   };
 
   return (
-    <Form {...form}>
-      <form className="space-y-4" onSubmit={form.handleSubmit(handleSignIn)}>
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter your email" {...field} type="email" />
-              </FormControl>
-              <FormMessage></FormMessage>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <div className="flex justify-between items-center">
-                <FormLabel>Password</FormLabel>
-                <Button
-                  type="button"
-                  variant="link"
-                  size="sm"
-                  className="text-sm font-normal underline cursor-pointer"
-                  onClick={openForgotPasswordTab}
-                >
-                  Forgot Password?
-                </Button>
-              </div>
-              <FormControl>
-                <PasswordInput placeholder="Enter your password" {...field} />
-              </FormControl>
-              <FormMessage></FormMessage>
-            </FormItem>
-          )}
-        />
+    <div className="space-y-4">
+      <Form {...form}>
+        <form className="space-y-4" onSubmit={form.handleSubmit(handleSignIn)}>
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Enter your email"
+                    {...field}
+                    type="email"
+                  />
+                </FormControl>
+                <FormMessage></FormMessage>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <div className="flex justify-between items-center">
+                  <FormLabel>Password</FormLabel>
+                  <Button
+                    type="button"
+                    variant="link"
+                    size="sm"
+                    className="text-sm font-normal underline cursor-pointer"
+                    onClick={openForgotPasswordTab}
+                  >
+                    Forgot Password?
+                  </Button>
+                </div>
+                <FormControl>
+                  <PasswordInput placeholder="Enter your password" {...field} />
+                </FormControl>
+                <FormMessage></FormMessage>
+              </FormItem>
+            )}
+          />
 
-        <Button type="submit" disabled={isSubmitting} className="w-full">
-          <LoadingSwap isLoading={isSubmitting}>Sign In</LoadingSwap>
-        </Button>
-      </form>
-    </Form>
+          <Button type="submit" disabled={isSubmitting} className="w-full">
+            <LoadingSwap isLoading={isSubmitting}>Sign In</LoadingSwap>
+          </Button>
+        </form>
+      </Form>
+      <PasskeyButton />
+    </div>
   );
 }

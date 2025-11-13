@@ -67,8 +67,16 @@ export async function POST(request: Request) {
   return authHandlers.POST(clonedRequest);
 }
 
+async function safeJsonParse(request: Request) {
+  try {
+    return await request.json();
+  } catch {
+    return null; // return null if body is empty or invalid
+  }
+}
+
 async function checkArcjet(request: Request) {
-  const body = (await request.json()) as unknown;
+  const body = (await safeJsonParse(request)) as unknown;
   const session = await auth.api.getSession({ headers: request.headers });
   const userIdOrIp = (session?.user.id ?? findIp(request)) || "127.0.0.1";
 

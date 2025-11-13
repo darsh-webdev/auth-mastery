@@ -26,27 +26,61 @@ import {
 } from "@/components/ui/card";
 import { BetterAuthActionButton } from "@/components/auth/better-auth-action-button";
 import { Trash2 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { useState } from "react";
 
 const passkeySchema = z.object({
-  code: z.string().length(6),
+  name: z.string().min(1),
 });
 
 type PasskeyForm = z.infer<typeof passkeySchema>;
 
 export function PasskeyManagement({ passkeys }: { passkeys: Passkey[] }) {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const router = useRouter();
   const form = useForm<PasskeyForm>({
     resolver: zodResolver(passkeySchema),
     defaultValues: {
-      code: "",
+      name: "",
     },
   });
 
   const { isSubmitting } = form.formState;
 
-  function handleAddPasskey(data: PasskeyForm) {}
+  async function handleAddPasskey(data: PasskeyForm) {
+    await authClient.passkey.addPasskey(data, {
+      onError: (error) => {
+        toast.error(error.error.message || "Failed to add passkey");
+      },
+      onSuccess: () => {
+        toast.success("Passkey added successfully");
+        router.refresh();
+        setIsDialogOpen(false);
+      },
+    });
+  }
 
-  function handleDeletePasskey(passkeyId: string) {}
+  function handleDeletePasskey(passkeyId: string) {
+    return authClient.passkey.deletePasskey(
+      { id: passkeyId },
+      {
+        onError: (error) => {
+          toast.error(error.error.message || "Failed to delete passkey");
+        },
+        onSuccess: () => {
+          toast.success("Passkey deleted successfully");
+          router.refresh();
+        },
+      }
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -83,30 +117,50 @@ export function PasskeyManagement({ passkeys }: { passkeys: Passkey[] }) {
           ))}
         </div>
       )}
-      <Form {...form}>
-        <form
-          className="space-y-4"
-          onSubmit={form.handleSubmit(handleAddPasskey)}
-        >
-          <FormField
-            control={form.control}
-            name="code"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Code</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
 
-          <Button type="submit" disabled={isSubmitting} className="w-full">
-            <LoadingSwap isLoading={isSubmitting}>Verify</LoadingSwap>
-          </Button>
-        </form>
-      </Form>
+      <Dialog
+        open={isDialogOpen}
+        onOpenChange={(o) => {
+          if (o) form.reset();
+          setIsDialogOpen(o);
+        }}
+      >
+        <DialogTrigger asChild>
+          <Button>New Passkey</Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add New Passkey</DialogTitle>
+            <DialogDescription>
+              Create a new passkey for secure, passwordless authentication.
+            </DialogDescription>
+          </DialogHeader>
+          <Form {...form}>
+            <form
+              className="space-y-4"
+              onSubmit={form.handleSubmit(handleAddPasskey)}
+            >
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <Button type="submit" disabled={isSubmitting} className="w-full">
+                <LoadingSwap isLoading={isSubmitting}>Add</LoadingSwap>
+              </Button>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
