@@ -76,6 +76,7 @@ export function SignInTab({
                 <FormControl>
                   <Input
                     placeholder="Enter your email"
+                    autoComplete="email webauthn"
                     {...field}
                     type="email"
                   />
@@ -102,7 +103,11 @@ export function SignInTab({
                   </Button>
                 </div>
                 <FormControl>
-                  <PasswordInput placeholder="Enter your password" {...field} />
+                  <PasswordInput
+                    autoComplete="current-password webauthn"
+                    placeholder="Enter your password"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage></FormMessage>
               </FormItem>
