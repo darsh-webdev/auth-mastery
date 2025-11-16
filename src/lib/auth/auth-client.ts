@@ -4,6 +4,7 @@ import {
   inferAdditionalFields,
   passkeyClient,
   twoFactorClient,
+  adminClient,
 } from "better-auth/client/plugins";
 
 export const authClient = createAuthClient({
@@ -15,5 +16,6 @@ export const authClient = createAuthClient({
         window.location.href = "/auth/2fa";
       },
     }),
+    adminClient(),
   ],
 });

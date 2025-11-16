@@ -8,6 +8,7 @@ import { createAuthMiddleware } from "better-auth/api";
 import { sendWelcomeEmail } from "../emails/welcome-email";
 import { twoFactor } from "better-auth/plugins/two-factor";
 import { passkey } from "better-auth/plugins/passkey";
+import { admin } from "better-auth/plugins/admin";
 
 export const auth = betterAuth({
   user: {
@@ -70,7 +71,7 @@ export const auth = betterAuth({
       maxAge: 60 * 5, // 5 minutes
     },
   },
-  plugins: [nextCookies(), twoFactor(), passkey()],
+  plugins: [nextCookies(), twoFactor(), passkey(), admin()],
   hooks: {
     after: createAuthMiddleware(async (ctx) => {
       if (ctx.path.startsWith("/sign-up")) {
