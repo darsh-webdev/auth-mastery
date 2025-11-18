@@ -21,8 +21,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { TableCell, TableRow } from "@/components/ui/table";
+import { authClient } from "@/lib/auth/auth-client";
 import { UserWithRole } from "better-auth/plugins/admin";
 import { MoreHorizontal } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function UserRow({
   user,
@@ -31,13 +34,83 @@ export default function UserRow({
   user: UserWithRole;
   selfId: string;
 }) {
+  const { refetch } = authClient.useSession();
   const isSelf = user.id === selfId;
+  const router = useRouter();
 
-  const handleImpersonateUser = (userId: string) => {};
-  const handleRevokeSessions = (userId: string) => {};
-  const handleUnbanUser = (userId: string) => {};
-  const handleBanUser = (userId: string) => {};
-  const handleRemoveUser = (userId: string) => {};
+  const handleImpersonateUser = (userId: string) => {
+    authClient.admin.impersonateUser(
+      { userId },
+      {
+        onError: (error) => {
+          toast.error(error.error.message || "Failed to impersonate user");
+        },
+        onSuccess: () => {
+          refetch();
+          router.push("/");
+        },
+      }
+    );
+  };
+
+  const handleRevokeSessions = (userId: string) => {
+    authClient.admin.revokeUserSessions(
+      { userId },
+      {
+        onError: (error) => {
+          toast.error(error.error.message || "Failed to revoke user sessions");
+        },
+        onSuccess: () => {
+          toast.success("User sessions revoked successfully");
+        },
+      }
+    );
+  };
+
+  const handleUnbanUser = (userId: string) => {
+    authClient.admin.unbanUser(
+      { userId },
+      {
+        onError: (error) => {
+          toast.error(error.error.message || "Failed to unban user");
+        },
+        onSuccess: () => {
+          toast.success("User unbanned successfully");
+          router.refresh();
+        },
+      }
+    );
+  };
+
+  const handleBanUser = (userId: string) => {
+    authClient.admin.banUser(
+      { userId },
+      {
+        onError: (error) => {
+          toast.error(error.error.message || "Failed to ban user");
+        },
+        onSuccess: () => {
+          toast.success("User banned successfully");
+          router.refresh();
+        },
+      }
+    );
+  };
+
+  const handleRemoveUser = (userId: string) => {
+    authClient.admin.removeUser(
+      { userId },
+      {
+        onError: (error) => {
+          toast.error(error.error.message || "Failed to delete user");
+        },
+        onSuccess: () => {
+          toast.success("User deleted successfully");
+          router.refresh();
+        },
+      }
+    );
+  };
 
   return (
     <TableRow key={user.id}>
