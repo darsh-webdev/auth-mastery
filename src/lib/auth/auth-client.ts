@@ -6,6 +6,7 @@ import {
   twoFactorClient,
   adminClient,
 } from "better-auth/client/plugins";
+import { admin, user, ac } from "@/components/auth/permissions";
 
 export const authClient = createAuthClient({
   plugins: [
@@ -16,6 +17,12 @@ export const authClient = createAuthClient({
         window.location.href = "/auth/2fa";
       },
     }),
-    adminClient(),
+    adminClient({
+      ac,
+      roles: {
+        admin,
+        user,
+      },
+    }),
   ],
 });
