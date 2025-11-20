@@ -5,6 +5,7 @@ import {
   passkeyClient,
   twoFactorClient,
   adminClient,
+  organizationClient,
 } from "better-auth/client/plugins";
 import { admin, user, ac } from "@/components/auth/permissions";
 
@@ -24,5 +25,6 @@ export const authClient = createAuthClient({
         user,
       },
     }),
+    organizationClient(),
   ],
 });

@@ -10,6 +10,7 @@ import { twoFactor } from "better-auth/plugins/two-factor";
 import { passkey } from "better-auth/plugins/passkey";
 import { admin as adminPlugin } from "better-auth/plugins/admin";
 import { admin, user, ac } from "@/components/auth/permissions";
+import { organization } from "better-auth/plugins/organization";
 
 export const auth = betterAuth({
   user: {
@@ -83,6 +84,7 @@ export const auth = betterAuth({
         user,
       },
     }),
+    organization(),
   ],
   hooks: {
     after: createAuthMiddleware(async (ctx) => {
