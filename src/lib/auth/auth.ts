@@ -13,6 +13,7 @@ import { admin, user, ac } from "@/components/auth/permissions";
 import { organization } from "better-auth/plugins/organization";
 
 export const auth = betterAuth({
+  appName: "Auth Mastery App",
   user: {
     changeEmail: {
       enabled: true,
