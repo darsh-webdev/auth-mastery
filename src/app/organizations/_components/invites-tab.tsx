@@ -9,6 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { authClient } from "@/lib/auth/auth-client";
+import CreateInviteButton from "./create-invite-button";
 
 export default function InvitesTab() {
   const { data: activeOrganization } = authClient.useActiveOrganization();
@@ -24,7 +25,9 @@ export default function InvitesTab() {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-end">{/* <CreateInviteButton /> */}</div>
+      <div className="flex justify-end">
+        <CreateInviteButton />
+      </div>
       <Table>
         <TableHeader>
           <TableRow>
