@@ -11,6 +11,7 @@ import { passkey } from "better-auth/plugins/passkey";
 import { admin as adminPlugin } from "better-auth/plugins/admin";
 import { admin, user, ac } from "@/components/auth/permissions";
 import { organization } from "better-auth/plugins/organization";
+import sendOrganizationInviteEmail from "../emails/organization-invite-email";
 
 export const auth = betterAuth({
   appName: "Auth Mastery App",
@@ -85,7 +86,21 @@ export const auth = betterAuth({
         user,
       },
     }),
-    organization(),
+    organization({
+      sendInvitationEmail: async ({
+        email,
+        organization,
+        inviter,
+        invitation,
+      }) => {
+        await sendOrganizationInviteEmail({
+          email,
+          organization,
+          inviter: inviter.user,
+          invitation,
+        });
+      },
+    }),
   ],
   hooks: {
     after: createAuthMiddleware(async (ctx) => {
