@@ -12,6 +12,8 @@ import { admin as adminPlugin } from "better-auth/plugins/admin";
 import { admin, user, ac } from "@/components/auth/permissions";
 import { organization } from "better-auth/plugins/organization";
 import sendOrganizationInviteEmail from "../emails/organization-invite-email";
+import { member } from "@/drizzle/schema";
+import { desc, eq } from "drizzle-orm";
 
 export const auth = betterAuth({
   appName: "Auth Mastery App",
@@ -114,5 +116,25 @@ export const auth = betterAuth({
         }
       }
     }),
+  },
+  databaseHooks: {
+    session: {
+      create: {
+        before: async (userSession) => {
+          const membership = await db.query.member.findFirst({
+            where: eq(member.userId, userSession.userId),
+            orderBy: desc(member.createdAt),
+            columns: { organizationId: true },
+          });
+
+          return {
+            data: {
+              ...userSession,
+              activeOrganizationId: membership?.organizationId,
+            },
+          };
+        },
+      },
+    },
   },
 });
