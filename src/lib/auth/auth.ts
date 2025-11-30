@@ -7,13 +7,19 @@ import { sendVerificationEmail } from "../emails/email-verification";
 import { createAuthMiddleware } from "better-auth/api";
 import { sendWelcomeEmail } from "../emails/welcome-email";
 import { twoFactor } from "better-auth/plugins/two-factor";
-import { passkey } from "better-auth/plugins/passkey";
+import { passkey } from "@better-auth/passkey";
 import { admin as adminPlugin } from "better-auth/plugins/admin";
 import { admin, user, ac } from "@/components/auth/permissions";
 import { organization } from "better-auth/plugins/organization";
 import sendOrganizationInviteEmail from "../emails/organization-invite-email";
 import { member } from "@/drizzle/schema";
 import { desc, eq } from "drizzle-orm";
+import { stripe } from "@better-auth/stripe";
+import Stripe from "stripe";
+
+const stripeClient = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: "2025-11-17.clover",
+});
 
 export const auth = betterAuth({
   appName: "Auth Mastery App",
@@ -102,6 +108,11 @@ export const auth = betterAuth({
           invitation,
         });
       },
+    }),
+    stripe({
+      stripeClient,
+      stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET!,
+      createCustomerOnSignUp: true,
     }),
   ],
   hooks: {
