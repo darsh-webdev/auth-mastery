@@ -16,6 +16,7 @@ import { member } from "@/drizzle/schema";
 import { desc, eq } from "drizzle-orm";
 import { stripe } from "@better-auth/stripe";
 import Stripe from "stripe";
+import { STRIPE_PLANS } from "./stripe";
 
 const stripeClient = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2025-11-17.clover",
@@ -113,6 +114,10 @@ export const auth = betterAuth({
       stripeClient,
       stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET!,
       createCustomerOnSignUp: true,
+      subscription: {
+        enabled: true,
+        plans: STRIPE_PLANS,
+      },
     }),
   ],
   hooks: {
